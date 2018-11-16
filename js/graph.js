@@ -2,36 +2,30 @@ let timeSlider = document.querySelector('#slider-time');
 
 let searchParams = new URLSearchParams(location.search);
 
-// Various accessors that specify the four dimensions of data to visualize.
-function x(d) { return d[searchParams.get('xAxisValue')][`y${timeSlider.value}`]; }
-function y(d) { return d[searchParams.get('yAxisValue')][`y${timeSlider.value}`]; }
-function radius(d) { return d[searchParams.get('size')][`y${timeSlider.value}`]; }
-function key(d) { return d.name; }
-
 // Load the data.
 d3.json(`../data/drenets_${searchParams.get('educationLevel')}.json`, drenets => {
     // Chart dimensions.
-    let margin = { top: 20, right: 20, bottom: 20, left: 30 },
+    let margin = { top: 20, right: 20, bottom: 20, left: 35 },
         width = 850 - margin.right,
         height = 540 - margin.top - margin.bottom;
 
     // Various scales. These domains make assumptions of data, naturally.
     let xScale = d3.scale.linear().domain(getDomain(searchParams.get('xAxisValue'))).range([0, width]),
         yScale = d3.scale.linear().domain(getDomain(searchParams.get('yAxisValue'))).range([height, 0]),
-        radiusScale = d3.scale.linear().domain(getDomain(searchParams.get('size'))).range([5, 20]);
+        radiusScale = d3.scale.linear().domain(getDomain(searchParams.get('size'))).range([5, 30]);
 
     function getDomain(indicator) {
         let domain = [];
-        let padding = 2;
         drenets.map(d => {
             Object.keys(d[indicator]).forEach(key => {
-                if (!domain[0]) domain[0] = parseInt(d[indicator][key]);
-                if (!domain[1]) domain[1] = parseInt(d[indicator][key]);
-                if (parseInt(d[indicator][key]) < domain[0]) domain[0] = parseInt(d[indicator][key]);
-                if (parseInt(d[indicator][key]) > domain[1]) domain[1] = parseInt(d[indicator][key]);
+                if (!domain[0]) domain[0] = Number(d[indicator][key]);
+                if (!domain[1]) domain[1] = Number(d[indicator][key]);
+                if (Number(d[indicator][key]) < domain[0]) domain[0] = Number(d[indicator][key]);
+                if (Number(d[indicator][key]) > domain[1]) domain[1] = Number(d[indicator][key]);
             });
         })
-        return [domain[0] - padding, domain[1] + padding]
+        let padding = (domain[1] - domain[0]) / 10;
+        return [Math.max(0, domain[0] - padding), domain[1] + padding]
     }
 
     // The x & y axes.
@@ -63,7 +57,7 @@ d3.json(`../data/drenets_${searchParams.get('educationLevel')}.json`, drenets =>
         .attr("text-anchor", "end")
         .attr("x", width)
         .attr("y", height - 6)
-        .text(searchParams.get('xAxisValue'));
+        .text(indicators[indicators.findIndex(d => d.value == searchParams.get('xAxisValue'))].label);
 
     // Add a y-axis label.
     svg.append("text")
@@ -72,7 +66,7 @@ d3.json(`../data/drenets_${searchParams.get('educationLevel')}.json`, drenets =>
         .attr("y", 6)
         .attr("dy", ".75em")
         .attr("transform", "rotate(-90)")
-        .text(searchParams.get('yAxisValue'));
+        .text(indicators[indicators.findIndex(d => d.value == searchParams.get('yAxisValue'))].label);
 
     // Add the year label; the value is set on transition.
     var yearLabel = svg.append("text")
@@ -88,7 +82,7 @@ d3.json(`../data/drenets_${searchParams.get('educationLevel')}.json`, drenets =>
         .attr("text-anchor", "start")
         .attr("y", 80)
         .attr("x", 20)
-        .text(" ");
+        .text("");
 
     let dot = svg.append("g")
         .attr("class", "dots")
@@ -108,13 +102,20 @@ d3.json(`../data/drenets_${searchParams.get('educationLevel')}.json`, drenets =>
 
     function update() {
         dot.transition()
-            .attr("cx", function (d) { return xScale(x(d)); })
-            .attr("cy", function (d) { return yScale(y(d)); })
-            .attr("r", function (d) { return radiusScale(radius(d)); })
-            .sort((a, b) => radius(b) - radius(a));
+            .attr("cx", (d) => {
+                return xScale(d[searchParams.get('xAxisValue')][`y${timeSlider.value}`]);
+            })
+            .attr("cy", (d) => {
+                return yScale(d[searchParams.get('yAxisValue')][`y${timeSlider.value}`]);
+            })
+            .attr("r", (d) => {
+                return radiusScale(d[searchParams.get('size')][`y${timeSlider.value}`]);
+            })
+            .sort((a, b) => {
+                radius(b) - radius(a)
+            });
         yearLabel.text(timeSlider.value);
     }
-
     timeSlider.addEventListener('input', update)
 
     update();
