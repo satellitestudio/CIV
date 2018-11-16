@@ -1,0 +1,44 @@
+body {
+    font-family: var(--main-font-family);
+}
+
+.border {
+    fill: none;
+    stroke: var(--main-bg-color);
+    pointer-events: none;
+}
+
+.info {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+}
+
+.year {
+    display: block;
+    font-weight: 300;
+    font-size: 80px;
+    line-height: 70px;
+    color: var(--secondary-brand-color);
+    opacity: .1;
+}
+
+.indicator {
+    display: block;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--secondary-brand-color);
+    opacity: .5;
+}
+
+.axis text {
+    font-size: 10px;
+    font-family: var(--main-font-family);
+    color: var(--secondary-brand-color);
+    opacity: .5;
+}
+
+.axis line, .axis path {
+    fill: none;
+    stroke: none;
+}

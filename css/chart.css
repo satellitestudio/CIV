@@ -1,0 +1,60 @@
+text {
+  cursor: default;
+}
+
+text {
+  font-size: 10px;
+  font-family: var(--main-font-family);
+  color: var(--secondary-brand-color);
+  opacity: .5;
+}
+
+.dot {
+  fill: var(--main-brand-color);
+  stroke: var(--main-bg-color);
+}
+
+.axis path, .axis line {
+  fill: none;
+  stroke: rgba(0, 0, 0, .2);
+  shape-rendering: crispEdges;
+}
+
+.label {
+  fill: rgba(0, 0, 0, .5);
+}
+
+.year.label {
+  font: 500 80px var(--main-font-family);
+  fill: rgba(0, 0, 0, .1);
+}
+
+.country.label  {
+  font: 500 80px var(--main-font-family);
+  fill: rgba(0, 0, 0, .1);
+}
+
+.year.label.active {
+  fill: #aaa;
+}
+
+circle.pointTrajectory {
+  pointer-events: none;
+  stroke: var(--line-color);
+  opacity: 0;
+}
+
+path.lineTrajectory {
+  stroke-width: 2;
+  stroke-opacity: .5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke: var(--secondary-brand-color);
+  fill: none;
+  pointer-events: none;
+}
+
+.selected {
+  stroke-width: 4;
+}
+

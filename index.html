@@ -1,0 +1,74 @@
+<!DOCTYPE html/>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Graph</title>
+    <script src="./js/lib/d3.v3.js"></script>
+    <script src="./js/lib/dragit.js"></script>
+    <link rel="stylesheet" href="./css/dragit.css" />
+    <link rel="stylesheet" href="./css/common.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+</head>
+
+<body>
+    <!-- TODO: Change temporary url params -->
+    <iframe src="graph.html?yAxisValue=lifeExpectancy&xAxisValue=income&size=population" frameborder="0"></iframe>
+    <div class="settings">
+        <div class="tabs">
+            <button value="graph" class="tab tab_selected">Graph</button>
+            <button value="map" class="tab">Map</button>
+        </div>
+        <div class="settings_group settings_graph">
+            <div class="setting education">
+                <span class="label">Education level</span>
+                <div class="buttons">
+                    <button value="elementary" class="button_selected">Elementary</button>
+                    <button value="secondary">Secondary</button>
+                </div>
+            </div>
+            <div class="setting yaxis">
+                <span class="label">Y Axis</span>
+                <select></select>
+            </div>
+            <div class="setting xaxis">
+                <span class="label">X Axis</span>
+                <select></select>
+            </div>
+            <div class="setting size">
+                <span class="label">Size by number of</span>
+                <div class="buttons">
+                    <button value="schools" class="button_selected">Schools</button>
+                    <button value="students">Students</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="settings_group settings_map hidden">
+            <div class="setting education">
+                <span class="label">Education level</span>
+                <div class="buttons">
+                    <button value="elementary" class="button_selected">Elementary</button>
+                    <button value="secondary">Secondary</button>
+                </div>
+            </div>
+            <div class="setting boundaries">
+                <span class="label">Boundaries</span>
+                <div class="buttons">
+                    <button value="districts">Districts</button>
+                    <button value="regions" class="button_selected">Regions</button>
+                    <button value="departments">Departments</button>
+                </div>
+            </div>
+            <div class="setting indicator">
+                <span class="label">Indicator</span>
+                <select></select>
+            </div>
+        </div>
+
+    </div>
+    <script src="./js/defaults.js"></script>
+    <script src="./js/index.js"></script>
+</body>
+
+</html>

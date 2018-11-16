@@ -1,0 +1,39 @@
+<!DOCTYPE html/>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Map</title>
+  <script src="./js/lib/d3.v3.js"></script>
+  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <!-- <script src="https://raw.github.com/fryn/html5slider/master/html5slider.js"></script> -->
+  <link rel="stylesheet" href="./css/dragit.css" />
+  <link rel="stylesheet" href="./css/common.css" />
+  <link rel="stylesheet" href="./css/map.css" />
+</head>
+
+<body>
+  <div class="info">
+    <span class="year">1987</span>
+    <span class="indicator">Enrollment Rate</span>
+  </div>
+  <div class="map"></div>
+  <div class="timeline">
+    <!-- <input id="slider" type="range" min="1987" max="2010" value="1987" step="1" /> -->
+    <input type="range" name="points" min="1987" max="2010" step="1" value="1987" id="slider-time">
+    <div class="labels">
+      <span>08/09</span>
+      <span>09/10</span>
+      <span>10/11</span>
+      <span>11/12</span>
+      <span>12/13</span>
+      <span>13/14</span>
+      <span>14/15</span>
+      <span>15/16</span>
+      <span>16/17</span>
+    </div>
+  </div>
+  <script src="./js/map.js"></script>
+</body>
+
+</html>
