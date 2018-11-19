@@ -3,6 +3,10 @@
 let width = 800, height = 400;
 
 let timeSlider = document.querySelector('#slider-time');
+
+let searchParams = new URLSearchParams(location.search);
+let adminLevel = searchParams.get('boundaries');
+
 let year = timeSlider.value;
 let yearTitle = document.querySelector('.year');
 
@@ -13,10 +17,7 @@ let colorScale = d3.scale.linear()
     .domain(domain)
     .range(colors);
 
-let projection = d3.geo.conicConformal()
-    .parallels([35 + 34 / 60, 90 + 46 / 60])
-    .rotate([98 + 00 / 60, -35 + 00 / 60])
-    .translate([width / 2, height / 2]);
+let projection = d3.geo.mercator()
 
 let path = d3.geo.path()
     .projection(projection);
@@ -26,17 +27,25 @@ let svg = d3.select(".map")
     .attr("width", width)
     .attr("height", height);
 
-d3.json("../data/ok-countiesStudentRatio.json", (error, ok) => {
-    let counties = topojson.feature(ok, ok.objects.counties);
+d3.queue()
+.defer(d3.json, `../data/admin${adminLevel}.json`)
+.defer(d3.json, `../data/drenets_${searchParams.get('educationLevel')}.json`)
+.await(function(error, topoJSON, data) {
+        console.log(data)
+
+    let topoJSONRoot = `gadm36_CIV_${adminLevel}`;
+    let counties = topojson.feature(topoJSON, topoJSON.objects[topoJSONRoot]);
 
     projection.scale(1).translate([0, 0]);
 
-    let b = path.bounds(counties), s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height), t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
-
+    let b = path.bounds(counties);
+    let s = 1.1 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
+    let t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
     projection.scale(s).translate(t);
 
     svg.selectAll("path")
-        .data(counties.features.filter(d => d.id))
+        .data(counties.features)
+        // .data(counties.features.filter(d => d.id))
         .enter()
         .append("path")
         .attr("class", "county")
@@ -45,7 +54,7 @@ d3.json("../data/ok-countiesStudentRatio.json", (error, ok) => {
         .text(d => d.properties.county);
 
     svg.append("path")
-        .datum(topojson.mesh(ok, ok.objects.counties, (a, b) => a !== b))
+        .datum(topojson.mesh(topoJSON, topoJSON.objects[topoJSONRoot], (a, b) => a !== b))
         .attr("class", "border")
         .attr("d", path);
 
@@ -59,6 +68,7 @@ setColors = () => {
     d3.selectAll("path")
         .attr("d", path)
         .style("fill", d => {
+            console.log(d.properties)
             if (d.properties) return colorScale(d.properties[year]);
         });
 }

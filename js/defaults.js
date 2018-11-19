@@ -16,6 +16,6 @@ let graphSettings = {
 
 let mapSettings = {
     educationLevel: 'elementary',
-    boundaries: 'regions',
+    boundaries: '2',
     indicator: 'enrollment_rate'
 }
