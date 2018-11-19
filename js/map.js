@@ -6,6 +6,7 @@ let timeSlider = document.querySelector('#slider-time');
 
 let searchParams = new URLSearchParams(location.search);
 let adminLevel = searchParams.get('boundaries');
+let currentIndicator = searchParams.get('indicator');
 
 let year = timeSlider.value;
 let yearTitle = document.querySelector('.year');
@@ -27,11 +28,13 @@ let svg = d3.select(".map")
     .attr("width", width)
     .attr("height", height);
 
+let data;
+
 d3.queue()
 .defer(d3.json, `../data/admin${adminLevel}.json`)
 .defer(d3.json, `../data/drenets_${searchParams.get('educationLevel')}.json`)
-.await(function(error, topoJSON, data) {
-        console.log(data)
+.await(function(error, topoJSON, data_) {
+    data = data_;
 
     let topoJSONRoot = `gadm36_CIV_${adminLevel}`;
     let counties = topojson.feature(topoJSON, topoJSON.objects[topoJSONRoot]);
@@ -68,8 +71,16 @@ setColors = () => {
     d3.selectAll("path")
         .attr("d", path)
         .style("fill", d => {
-            console.log(d.properties)
-            if (d.properties) return colorScale(d.properties[year]);
+            if (d.properties) {
+                const name = d.properties[`NAME_${adminLevel}`];
+                const adminData = data.find(d => d.name === name);
+                if (adminData) {
+                    const values = adminData[currentIndicator]; 
+                    const yearValue = values[`y${year}`];
+                    return colorScale(yearValue);
+                }
+
+            }
         });
 }
 
