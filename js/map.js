@@ -1,6 +1,6 @@
 
 //choropleth
-let width = 800, height = 400;
+let width = 800, height = 500;
 
 let timeSlider = document.querySelector('#slider-time');
 
@@ -31,39 +31,39 @@ let svg = d3.select(".map")
 let data;
 
 d3.queue()
-.defer(d3.json, `../data/admin${adminLevel}.json`)
-.defer(d3.json, `../data/drenets_${searchParams.get('educationLevel')}.json`)
-.await(function(error, topoJSON, data_) {
-    data = data_;
+    .defer(d3.json, `../data/admin${adminLevel}.json`)
+    .defer(d3.json, `../data/drenets_${searchParams.get('educationLevel')}.json`)
+    .await(function (error, topoJSON, data_) {
+        data = data_;
 
-    let topoJSONRoot = `gadm36_CIV_${adminLevel}`;
-    let counties = topojson.feature(topoJSON, topoJSON.objects[topoJSONRoot]);
+        let topoJSONRoot = `gadm36_CIV_${adminLevel}`;
+        let counties = topojson.feature(topoJSON, topoJSON.objects[topoJSONRoot]);
 
-    projection.scale(1).translate([0, 0]);
+        projection.scale(1).translate([0, 0]);
 
-    let b = path.bounds(counties);
-    let s = 1.1 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
-    let t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
-    projection.scale(s).translate(t);
+        let b = path.bounds(counties);
+        let s = 1 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
+        let t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+        projection.scale(s).translate(t);
 
-    svg.selectAll("path")
-        .data(counties.features)
-        // .data(counties.features.filter(d => d.id))
-        .enter()
-        .append("path")
-        .attr("class", "county")
-        .attr("d", path)
-        .append("title")
-        .text(d => d.properties.county);
+        svg.selectAll("path")
+            .data(counties.features)
+            // .data(counties.features.filter(d => d.id))
+            .enter()
+            .append("path")
+            .attr("class", "county")
+            .attr("d", path)
+            .append("title")
+            .text(d => d.properties.county);
 
-    svg.append("path")
-        .datum(topojson.mesh(topoJSON, topoJSON.objects[topoJSONRoot], (a, b) => a !== b))
-        .attr("class", "border")
-        .attr("d", path);
+        svg.append("path")
+            .datum(topojson.mesh(topoJSON, topoJSON.objects[topoJSONRoot], (a, b) => a !== b))
+            .attr("class", "border")
+            .attr("d", path);
 
-    timeSlider.addEventListener('input', setColors);
-    setColors();
-});
+        timeSlider.addEventListener('input', setColors);
+        setColors();
+    });
 
 setColors = () => {
     year = timeSlider.value
@@ -75,7 +75,7 @@ setColors = () => {
                 const name = d.properties[`NAME_${adminLevel}`];
                 const adminData = data.find(d => d.name === name);
                 if (adminData) {
-                    const values = adminData[currentIndicator]; 
+                    const values = adminData[currentIndicator];
                     const yearValue = values[`y${year}`];
                     return colorScale(yearValue);
                 }
