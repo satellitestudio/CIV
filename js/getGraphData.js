@@ -146,11 +146,11 @@ const getDrenet = (data, drenetId) => {
 
 
 window.getGraphData = (data, educationLevel) => {
-    
+
     const root = data[educationLevel];
     console.log(root)
-    
-    const drenets = Object.keys(root).map(drenetId => {
+
+    let drenets = Object.keys(root).map(drenetId => {
         // for now we are just interested in envType: all (rural + urban) and
         // schoolType: total (community + private + public) 
         const drenet = root[drenetId].all.total;
