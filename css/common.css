@@ -84,6 +84,7 @@ iframe {
     width: 100%;
     display: flex;
     justify-content: space-between;
+    padding: 0 5px;
 }
 
 .timeline .labels span {
@@ -97,7 +98,7 @@ iframe {
     position: absolute;
     content: '';
     top: -20px;
-    left: 15px;
+    left: 10px;
     content: 0;
     width: 4px;
     height: 4px;

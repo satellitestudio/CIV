@@ -3,10 +3,10 @@ text {
 }
 
 text {
-  font-size: 10px;
+  font-size: 14px;
   font-family: var(--main-font-family);
   color: var(--secondary-brand-color);
-  opacity: .7;
+  opacity: .8;
 }
 
 .dot {
