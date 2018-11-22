@@ -4,7 +4,9 @@ let timeSlider = document.querySelector('#slider-time');
 
 let searchParams = new URLSearchParams(location.search);
 
-d3.json("../data/data_2018-11-21_plus-amenities.json", data => {
+const basePath = (window.location.hostname === 'localhost') ? 'http://localhost:8000' : 'http://satellitestud.io/CIV'; 
+
+d3.json(`${basePath}/data/data_2018-11-21_plus-amenities.json`, data => {
     console.log(data)
     const drenets = window.getGraphData(data, searchParams.get('educationLevel'));
     // });
