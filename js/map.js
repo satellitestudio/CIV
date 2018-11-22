@@ -8,6 +8,9 @@ let timeSlider = document.querySelector('#slider-time');
 let searchParams = new URLSearchParams(location.search);
 let adminLevel = searchParams.get('boundaries');
 let currentIndicator = searchParams.get('indicator');
+const indicatorLabel = indicators.find(i => i.value === currentIndicator).label;
+document.getElementById('indicatorLabel').innerHTML = indicatorLabel;
+
 console.log(currentIndicator)
 
 let year = timeSlider.value;
@@ -70,6 +73,7 @@ d3.queue()
 
         timeSlider.addEventListener('input', setColors);
         setColors();
+        drawLegend()
     });
 
 setColors = () => {
@@ -96,51 +100,54 @@ setColors = () => {
         });
 }
 
+const drawLegend = () => {
 
-//key
-let w = 50, h = 100;
-
-let key = d3.select(".info")
-    .append("svg")
-    .attr("class", "legend")
-    .attr("width", w)
-    .attr("height", h);
-
-let legend = key.append("defs")
-    .append("svg:linearGradient")
-    .attr("id", "gradient")
-    .attr("x1", "100%")
-    .attr("y1", "0%")
-    .attr("x2", "100%")
-    .attr("y2", "100%");
-
-legend.append("stop")
-    .attr("offset", "0%")
-    .attr("stop-color", colors[1])
-    .attr("stop-opacity", 1);
-
-legend.append("stop")
-    .attr("offset", "100%")
-    .attr("stop-color", colors[0])
-    .attr("stop-opacity", 1);
-
-key.append("rect")
-    .attr("width", 10)
-    .attr("height", h)
-    .style("fill", "url(#gradient)")
-    .attr("transform", "translate(0,10)")
-
-let y = d3.scale.linear()
-    .range([h, 0])
-    .domain(domain);
-
-let yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("right")
-    .ticks(4);
-
-key.append("g")
-    .attr("class", "y axis")
-    .attr("transform", "translate(10,10)")
-    .call(yAxis)
-//end key
+    //key
+    let w = 50, h = 100;
+    console.log(domain)
+    
+    let key = d3.select(".info")
+        .append("svg")
+        .attr("class", "legend")
+        .attr("width", w)
+        .attr("height", h);
+    
+    let legend = key.append("defs")
+        .append("svg:linearGradient")
+        .attr("id", "gradient")
+        .attr("x1", "100%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "100%");
+    
+    legend.append("stop")
+        .attr("offset", "0%")
+        .attr("stop-color", colors[1])
+        .attr("stop-opacity", 1);
+    
+    legend.append("stop")
+        .attr("offset", "100%")
+        .attr("stop-color", colors[0])
+        .attr("stop-opacity", 1);
+    
+    key.append("rect")
+        .attr("width", 10)
+        .attr("height", h)
+        .style("fill", "url(#gradient)")
+        .attr("transform", "translate(0,10)");
+    
+    let y = d3.scale.linear()
+        .range([h, 0])
+        .domain(domain);
+    
+    let yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("right")
+        .ticks(4);
+    
+    key.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(10,10)")
+        .call(yAxis);
+    //end key
+};
