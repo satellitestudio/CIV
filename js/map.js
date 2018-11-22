@@ -1,4 +1,4 @@
-/* global d3 */
+/* global d3, topojson */
 
 //choropleth
 let width = 800, height = 500;
@@ -8,6 +8,7 @@ let timeSlider = document.querySelector('#slider-time');
 let searchParams = new URLSearchParams(location.search);
 let adminLevel = searchParams.get('boundaries');
 let currentIndicator = searchParams.get('indicator');
+console.log(currentIndicator)
 
 let year = timeSlider.value;
 let yearTitle = document.querySelector('.year');
@@ -19,7 +20,7 @@ let colorScale = d3.scale.linear()
     .domain(domain)
     .range(colors);
 
-let projection = d3.geo.mercator()
+let projection = d3.geo.mercator();
 
 let path = d3.geo.path()
     .projection(projection);
@@ -33,12 +34,15 @@ let data;
 
 d3.queue()
     .defer(d3.json, `../data/admin${adminLevel}.json`)
-    .defer(d3.json, `../data/drenets_${searchParams.get('educationLevel')}.json`)
+    .defer(d3.json, "../data/data_2018-11-21_plus-amenities.json")
     .await(function (error, topoJSON, data_) {
-        data = data_;
+        data = window.getGraphData(data_, searchParams.get('educationLevel'));
 
+        
         let topoJSONRoot = `gadm36_CIV_${adminLevel}`;
         let counties = topojson.feature(topoJSON, topoJSON.objects[topoJSONRoot]);
+        console.log(data.map(d => removeAccents(d.admin2)).sort());
+        console.log(counties.features.map(f => removeAccents(f.properties[`NAME_${adminLevel}`]).toUpperCase()).sort())
 
         projection.scale(1).translate([0, 0]);
 
@@ -73,11 +77,14 @@ setColors = () => {
         .attr("d", path)
         .style("fill", d => {
             if (d.properties) {
-                const name = d.properties[`NAME_${adminLevel}`];
-                const adminData = data.find(d => d.name === name);
+                let featureName = d.properties[`NAME_${adminLevel}`];
+                featureName = featureName.toUpperCase();
+                const adminData = data.find(d => d[`admin${adminLevel}`] === featureName);
+                // console.log(featureName, adminData, data.map(d => d.id))
                 if (adminData) {
                     const values = adminData[currentIndicator];
                     const yearValue = values[`y${year}`];
+                    console.log(adminData, values, yearValue)
                     return colorScale(yearValue);
                 }
 

@@ -1,3 +1,47 @@
+//  YAMOUSSOU-KRO + YAMOUSSOUKRO
+// SAN-PEDRO + SAN_PEDRO
+
+
+// DRENET	Namesake department	Corresponding region	Corresponding District
+const IDS = [
+    [ "ABIDJAN_1", "ABIDJAN", "ABIDJAN", "ABIDJAN" ],
+    [ "ABIDJAN_2", "ABIDJAN", "ABIDJAN", "ABIDJAN" ],
+    [ "ABIDJAN_3", "ABIDJAN", "ABIDJAN", "ABIDJAN" ],
+    [ "ABIDJAN_4", "ABIDJAN", "ABIDJAN", "ABIDJAN" ],
+    [ "ABENGOUROU", "ABENGOUROU", "INDENIE-DJUABLIN", "COMOE" ],
+    [ "ABOISSO", "ABOISSO", "SUD-COMOE", "COMOE" ],
+    [ "ADZOPE", "ADZOPE", "LA ME", "LAGUNES" ],
+    [ "AGBOVILLE", "AGBOVILLE", "AGNEBY-TIASSA", "LAGUNES" ],
+    [ "BONDOUKOU", "BONDOUKOU", "GONTOUGO", "ZANZAN" ],
+    [ "BONGOUANOU", "BONGOUANOU", "MORONOU", "LACS" ],
+    [ "BOUAFLE", "BOUAFLE", "MARAHOUE", "SASSANDRA-MARAHOUE" ],
+    [ "BOUAKE_1", "BOUAKE", "GBEKE", "LA VALLEE DU BANDAMA" ],
+    [ "BOUAKE_2", "BOUAKE", "GBEKE", "LA VALLEE DU BANDAMA" ],
+    [ "BOUNA", "BOUNA", "BOUNKANI", "ZANZAN" ],
+    [ "BOUNDIALI", "BOUNDIALI", "BAGOUE", "SAVANES" ],
+    [ "DABOU", "DABOU", "GRANDS PONTS", "LAGUNES" ],
+    [ "DALOA", "DALOA", "HAUT-SASSANDRA", "SASSANDRA-MARAHOUE" ],
+    [ "DAOUKRO", "DAOUKRO", "IFFOU", "LACS" ],
+    [ "DIMBOKRO", "DIMBOKRO", "N'ZI", "LACS" ],
+    [ "DIVO", "DIVO", "LÔH-DJIBOUA", "GÔH-DJIBOUA" ],
+    [ "DUEKOUE", "DUEKOUE", "GUEMON", "MONTAGNES" ],
+    [ "FERKESSEDOUGOU", "FERKESSEDOUGOU", "TCHOLOGO", "SAVANES" ],
+    [ "GAGNOA", "GAGNOA", "LÔH-DJIBOUA", "GÔH-DJIBOUA" ],
+    [ "GUIGLO", "GUIGLO", "CAVALLY", "MONTAGNES" ],
+    [ "KATIOLA", "KATIOLA", "HAMBOL", "LA VALLEE DU BANDAMA" ],
+    [ "KORHOGO", "KORHOGO", "PORO", "SAVANES" ],
+    [ "MAN", "MAN", "TONKPI", "MONTAGNES" ],
+    [ "MANKONO", "MANKONO", "BERE", "WOROBA" ],
+    [ "MINIGNAN", "MINIGNAN", "FOLON", "DENGUELE" ],
+    [ "ODIENNE", "ODIENNE", "KABADOUGOU", "DENGUELE" ],
+    [ "SAN-PEDRO", "SAN-PEDRO", "SAN-PEDRO", "BAS-SASSANDRA" ],
+    [ "SASSANDRA", "SASSANDRA", "GBOKLE", "BAS-SASSANDRA" ],
+    [ "SEGUELA", "SEGUELA", "WORODOUGOU", "WOROBA" ],
+    [ "SOUBRE", "SOUBRE", "NAWA", "BAS-SASSANDRA" ],
+    [ "TOUBA", "TOUBA", "BAFING", "WOROBA" ],
+    [ "YAMOUSSOUKRO", "YAMOUSSOUKRO", "YAMOUSSOUKRO", "YAMOUSSOUKRO"]
+];
+
 const logError = (msg, drenetId, year) => {
     console.warn(`${msg} for ${drenetId}, ${year}`);
 };
@@ -73,13 +117,19 @@ const addIndicator = (drenet, drenetId, data, year, indicatorId, method) => {
         drenet[indicatorId] = {};
     }
     drenet[indicatorId][`y${year}`] = method(yearData, drenetId, year, data);
-}
+};
 
 const getDrenet = (data, drenetId) => {
     const drenet = {
         id: drenetId,
         name: drenetId
     };
+    
+    const idRow = IDS.find(row => row[0] === drenetId);
+    if (idRow !== undefined) {
+        drenet.admin1 = idRow[3];
+        drenet.admin2 = idRow[2];
+    }
 
     Object.keys(data).forEach(year => {
         addIndicator(drenet, drenetId, data, year, "number_of_schools", getNumberOfSchools);

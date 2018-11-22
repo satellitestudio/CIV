@@ -4,7 +4,7 @@ let timeSlider = document.querySelector('#slider-time');
 
 let searchParams = new URLSearchParams(location.search);
 
-d3.json('../data/data_2018-11-21_plus-amenities.json', data => {
+d3.json("../data/data_2018-11-21_plus-amenities.json", data => {
     console.log(data)
     const drenets = window.getGraphData(data, searchParams.get('educationLevel'));
 // });
