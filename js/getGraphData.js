@@ -110,6 +110,39 @@ const getRepeatingRatioGirls = (data, drenetId, year) => {
     return data.repeaters.girls / data.students.girls;
 };
 
+const getAmenitiesElectricity = (data, drenetId, year) => {
+    if (data.amenities === undefined) {
+        logError("no amenities", drenetId, year);
+        return null;
+    }
+    return (data.amenities.electricity / data.schools) * 100;
+};
+
+const getAmenitiesFoodhall = (data, drenetId, year) => {
+    if (data.amenities === undefined) {
+        logError("no amenities", drenetId, year);
+        return null;
+    }
+    return (data.amenities.foodhall / data.schools) * 100;
+};
+
+const getAmenitiesLatrine = (data, drenetId, year) => {
+    if (data.amenities === undefined) {
+        logError("no amenities", drenetId, year);
+        return null;
+    }
+    return (data.amenities.latrine / data.schools) * 100;
+};
+
+const getAmenitiesWaterPoint = (data, drenetId, year) => {
+    if (data.amenities === undefined) {
+        logError("no amenities", drenetId, year);
+        return null;
+    }
+    return (data.amenities.water_point / data.schools) * 100;
+};
+
+
 // mutates
 const addIndicator = (drenet, drenetId, data, year, indicatorId, method) => {
     const yearData = data[year];
@@ -139,8 +172,12 @@ const getDrenet = (data, drenetId) => {
         addIndicator(drenet, drenetId, data, year, "repeating_ratio_girls", getRepeatingRatioGirls);
         addIndicator(drenet, drenetId, data, year, "teacher_student_ratio", getTeacherStudentRatio);
         addIndicator(drenet, drenetId, data, year, "classroom_student_ratio", getClassroomStudentRatio);
+        addIndicator(drenet, drenetId, data, year, "amenities_electricity", getAmenitiesElectricity);
+        addIndicator(drenet, drenetId, data, year, "amenities_foodhall", getAmenitiesFoodhall);
+        addIndicator(drenet, drenetId, data, year, "amenities_latrine", getAmenitiesLatrine);
+        addIndicator(drenet, drenetId, data, year, "amenities_water_point", getAmenitiesWaterPoint);
     });
-
+    
     return drenet;
 };
 

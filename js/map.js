@@ -33,7 +33,7 @@ let svg = d3.select(".map")
 
 let data;
 
-const basePath = (window.location.hostname === 'localhost') ? 'http://localhost:8000' : 'http://satellitestud.io/CIV'; 
+const basePath = (window.location.hostname === '127.0.0.1') ? 'http://127.0.0.1:5500' : 'http://satellitestud.io/CIV'; 
 
 d3.queue()
     .defer(d3.json, `${basePath}/data/admin${adminLevel}.json`)
@@ -93,8 +93,9 @@ setColors = () => {
                     const values = adminData[currentIndicator];
                     const yearValue = values[`y${year}`];
                     // console.log(adminData, values, yearValue)
-                    return colorScale(yearValue);
+                    return (yearValue === null || yearValue === undefined || isNaN(yearValue)) ? 'gray' : colorScale(yearValue);
                 } else {
+                    return 'gray'
                     console.warn('not found geojson:', featureName)
                 }
 
