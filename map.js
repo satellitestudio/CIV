@@ -33,11 +33,9 @@ let svg = d3.select(".map")
 
 let data;
 
-const basePath = (window.location.hostname === '127.0.0.1') ? 'http://127.0.0.1:5500' : 'http://satellitestud.io/CIV'; 
-
 d3.queue()
-    .defer(d3.json, `${basePath}/data/admin${adminLevel}.json`)
-    .defer(d3.json, `${basePath}/data/data_2018-11-21_plus-amenities.json`)
+    .defer(d3.json, `./data/admin${adminLevel}.json`)
+    .defer(d3.json, "./data/data_2018-11-21_plus-amenities.json")
     .await(function (error, topoJSON, data_) {
         data = window.getGraphData(data_, searchParams.get('educationLevel'));
 
