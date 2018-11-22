@@ -120,6 +120,12 @@ d3.json('../data/data_2018-11-21_plus-amenities.json', data => {
                 else return radiusScale(d[searchParams.get('size')][`y${timeSlider.value}`]);
             })
 
+        dot.sort(function (a, b) {
+            if (a.name === 'NATIONAL') return -1;
+            else if (b.name === 'NATIONAL') return 1
+            else return a[searchParams.get('size')][`y${timeSlider.value}`] - b[searchParams.get('size')][`y${timeSlider.value}`];
+        });
+
         yearLabel.text(timeSlider.value);
     }
     timeSlider.addEventListener('input', update)

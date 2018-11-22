@@ -108,9 +108,5 @@ window.getGraphData = (data, educationLevel) => {
         return getDrenet(drenet, drenetId);
     });
 
-    const national = drenets.splice(drenets.findIndex(d => d.id === 'NATIONAL'), 1);
-    console.log(national)
-    drenets = [national[0], ...drenets]
-
     return drenets;
 };
