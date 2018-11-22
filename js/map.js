@@ -1,8 +1,13 @@
 
 //choropleth
-let width = 800, height = 400;
+let width = 800, height = 500;
 
 let timeSlider = document.querySelector('#slider-time');
+
+let searchParams = new URLSearchParams(location.search);
+let adminLevel = searchParams.get('boundaries');
+let currentIndicator = searchParams.get('indicator');
+
 let year = timeSlider.value;
 let yearTitle = document.querySelector('.year');
 
@@ -13,10 +18,7 @@ let colorScale = d3.scale.linear()
     .domain(domain)
     .range(colors);
 
-let projection = d3.geo.conicConformal()
-    .parallels([35 + 34 / 60, 90 + 46 / 60])
-    .rotate([98 + 00 / 60, -35 + 00 / 60])
-    .translate([width / 2, height / 2]);
+let projection = d3.geo.mercator()
 
 let path = d3.geo.path()
     .projection(projection);
@@ -26,32 +28,42 @@ let svg = d3.select(".map")
     .attr("width", width)
     .attr("height", height);
 
-d3.json("../data/ok-countiesStudentRatio.json", (error, ok) => {
-    let counties = topojson.feature(ok, ok.objects.counties);
+let data;
 
-    projection.scale(1).translate([0, 0]);
+d3.queue()
+    .defer(d3.json, `../data/admin${adminLevel}.json`)
+    .defer(d3.json, `../data/drenets_${searchParams.get('educationLevel')}.json`)
+    .await(function (error, topoJSON, data_) {
+        data = data_;
 
-    let b = path.bounds(counties), s = .95 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height), t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+        let topoJSONRoot = `gadm36_CIV_${adminLevel}`;
+        let counties = topojson.feature(topoJSON, topoJSON.objects[topoJSONRoot]);
 
-    projection.scale(s).translate(t);
+        projection.scale(1).translate([0, 0]);
 
-    svg.selectAll("path")
-        .data(counties.features.filter(d => d.id))
-        .enter()
-        .append("path")
-        .attr("class", "county")
-        .attr("d", path)
-        .append("title")
-        .text(d => d.properties.county);
+        let b = path.bounds(counties);
+        let s = 1 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height);
+        let t = [(width - s * (b[1][0] + b[0][0])) / 2, (height - s * (b[1][1] + b[0][1])) / 2];
+        projection.scale(s).translate(t);
 
-    svg.append("path")
-        .datum(topojson.mesh(ok, ok.objects.counties, (a, b) => a !== b))
-        .attr("class", "border")
-        .attr("d", path);
+        svg.selectAll("path")
+            .data(counties.features)
+            // .data(counties.features.filter(d => d.id))
+            .enter()
+            .append("path")
+            .attr("class", "county")
+            .attr("d", path)
+            .append("title")
+            .text(d => d.properties.county);
 
-    timeSlider.addEventListener('input', setColors);
-    setColors();
-});
+        svg.append("path")
+            .datum(topojson.mesh(topoJSON, topoJSON.objects[topoJSONRoot], (a, b) => a !== b))
+            .attr("class", "border")
+            .attr("d", path);
+
+        timeSlider.addEventListener('input', setColors);
+        setColors();
+    });
 
 setColors = () => {
     year = timeSlider.value
@@ -59,7 +71,16 @@ setColors = () => {
     d3.selectAll("path")
         .attr("d", path)
         .style("fill", d => {
-            if (d.properties) return colorScale(d.properties[year]);
+            if (d.properties) {
+                const name = d.properties[`NAME_${adminLevel}`];
+                const adminData = data.find(d => d.name === name);
+                if (adminData) {
+                    const values = adminData[currentIndicator];
+                    const yearValue = values[`y${year}`];
+                    return colorScale(yearValue);
+                }
+
+            }
         });
 }
 

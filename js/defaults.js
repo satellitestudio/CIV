@@ -11,11 +11,11 @@ let graphSettings = {
     educationLevel: 'elementary',
     yAxisValue: 'enrollment_rate',
     xAxisValue: 'gdp_per_capita',
-    size: 'schools'
+    size: 'number_of_schools'
 }
 
 let mapSettings = {
     educationLevel: 'elementary',
-    boundaries: 'regions',
+    boundaries: '2',
     indicator: 'enrollment_rate'
 }

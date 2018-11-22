@@ -13,7 +13,9 @@
 
 <body>
     <!-- TODO: Change temporary url params -->
-    <iframe src="graph.html?yAxisValue=lifeExpectancy&xAxisValue=income&size=population" frameborder="0"></iframe>
+    <iframe src="graph.html?educationLevel=elementary&yAxisValue=enrollment_rate&xAxisValue=gdp_per_capita&size=number_of_schools"
+        frameborder="0">
+    </iframe>
     <div class="settings">
         <div class="tabs">
             <button value="graph" class="tab tab_selected">Graph</button>
@@ -38,8 +40,8 @@
             <div class="setting size">
                 <span class="label">Size by number of</span>
                 <div class="buttons">
-                    <button value="schools" class="button_selected">Schools</button>
-                    <button value="students">Students</button>
+                    <button value="number_of_schools" class="button_selected">Schools</button>
+                    <button value="number_of_students">Students</button>
                 </div>
             </div>
         </div>
@@ -55,9 +57,9 @@
             <div class="setting boundaries">
                 <span class="label">Boundaries</span>
                 <div class="buttons">
-                    <button value="districts">Districts</button>
-                    <button value="regions" class="button_selected">Regions</button>
-                    <button value="departments">Departments</button>
+                    <button value="1">Districts</button>
+                    <button value="2" class="button_selected">Regions</button>
+                    <button value="3">Departments</button>
                 </div>
             </div>
             <div class="setting indicator">
