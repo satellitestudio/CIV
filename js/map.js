@@ -66,7 +66,7 @@ d3.queue()
             .attr("class", "county")
             .attr("d", path)
             .append("title")
-            .text(d => d.properties.county);
+            .text(d => d.properties[`NAME_${adminLevel}`]);
 
         svg.append("path")
             .datum(topojson.mesh(topoJSON, topoJSON.objects[topoJSONRoot], (a, b) => a !== b))
@@ -87,15 +87,16 @@ setColors = () => {
             if (d.properties) {
                 let featureName = d.properties[`NAME_${adminLevel}`];
                 featureName = cleanupName(featureName.toUpperCase());
+                console.log(featureName)
                 const adminData = data.find(d => cleanupName(d[`admin${adminLevel}`]) === featureName);
                 // console.log(featureName, adminData, data.map(d => d.id))
                 if (adminData) {
                     const values = adminData[currentIndicator];
                     const yearValue = values[`y${year}`];
                     // console.log(adminData, values, yearValue)
-                    return (yearValue === null || yearValue === undefined || isNaN(yearValue)) ? 'gray' : colorScale(yearValue);
+                    return (yearValue === null || yearValue === undefined || isNaN(yearValue)) ? 'white' : colorScale(yearValue);
                 } else {
-                    return 'gray'
+                    return 'white'
                     console.warn('not found geojson:', featureName)
                 }
 

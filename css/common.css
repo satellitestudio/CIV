@@ -89,7 +89,7 @@ iframe {
 
 .timeline .labels span {
     position: relative;
-    font-size: 11px;
+    font-size: 14px;
     margin-top: 5px;
     color: var(--secondary-brand-color);
 }

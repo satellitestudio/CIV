@@ -183,7 +183,7 @@ const getDrenet = (data, drenetId) => {
         
         addIndicator(drenet, drenetId, data, year, "pop_men", drenetCensus.pop_men);
         addIndicator(drenet, drenetId, data, year, "pop_women", drenetCensus.pop_women);
-        addIndicator(drenet, drenetId, data, year, "pop", drenetCensus.pop_men);
+        addIndicator(drenet, drenetId, data, year, "pop", drenetCensus.pop);
         addIndicator(drenet, drenetId, data, year, "men_women_ratio", drenetCensus.men_women_ratio);
         addIndicator(drenet, drenetId, data, year, "households", drenetCensus.households);
         addIndicator(drenet, drenetId, data, year, "avg_household_size", drenetCensus.avg_household_size);
@@ -207,9 +207,9 @@ const getCensusPerRegion = () => {
                 households: 0
             };
         }
-        censusPerRegion[region].pop_men += parseInt(c[4]);
-        censusPerRegion[region].pop_women += parseInt(c[5]);
-        censusPerRegion[region].pop += parseInt(c[6]);
+        censusPerRegion[region].pop_men += parseInt(c[4]) / 1000000;
+        censusPerRegion[region].pop_women += parseInt(c[5]) / 1000000;
+        censusPerRegion[region].pop += parseInt(c[6]) / 1000000;
         censusPerRegion[region].households += parseInt(c[8]);
     });
 
