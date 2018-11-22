@@ -1,3 +1,4 @@
+/* global d3 */
 
 //choropleth
 let width = 800, height = 500;

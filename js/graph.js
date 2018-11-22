@@ -1,3 +1,5 @@
+/* global d3 */
+
 let timeSlider = document.querySelector('#slider-time');
 
 let searchParams = new URLSearchParams(location.search);
