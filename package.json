@@ -1,0 +1,22 @@
+{
+  "name": "civ",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/satellitestudio/CIV.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/satellitestudio/CIV/issues"
+  },
+  "homepage": "https://github.com/satellitestudio/CIV#readme",
+  "devDependencies": {
+    "eslint": "^5.9.0"
+  }
+}

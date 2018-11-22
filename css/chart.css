@@ -10,7 +10,7 @@ text {
 }
 
 .dot {
-  fill: var(--main-brand-color);
+  /* fill: var(--main-brand-color); */
   stroke: var(--main-bg-color);
   opacity: .5;
 }
@@ -26,13 +26,14 @@ text {
 }
 
 .year.label {
-  font: 500 80px var(--main-font-family);
+  font: 400 60px var(--main-font-family);
   fill: rgba(0, 0, 0, .1);
 }
 
 .country.label  {
-  font: 500 80px var(--main-font-family);
+  font: 400 60px var(--main-font-family);
   fill: rgba(0, 0, 0, .1);
+  text-transform: capitalize;
 }
 
 .year.label.active {
@@ -58,5 +59,6 @@ path.lineTrajectory {
 .selected {
   stroke-width: 2;
   opacity: 1;
+  fill: #F6B1A0;
 }
 
