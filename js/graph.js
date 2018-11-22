@@ -7,8 +7,8 @@ let searchParams = new URLSearchParams(location.search);
 d3.json('../data/data_2018-11-21_plus-amenities.json', data => {
     console.log(data)
     const drenets = window.getGraphData(data, searchParams.get('educationLevel'));
-// });
-// d3.json(`../data/drenets_${searchParams.get('educationLevel')}.json`, drenets => {
+    // });
+    // d3.json(`../data/drenets_${searchParams.get('educationLevel')}.json`, drenets => {
     console.log(drenets);
     // Chart dimensions.
     let margin = { top: 20, right: 20, bottom: 20, left: 35 },
@@ -18,20 +18,20 @@ d3.json('../data/data_2018-11-21_plus-amenities.json', data => {
     // Various scales. These domains make assumptions of data, naturally.
     let xScale = d3.scale.linear().domain(getDomain(searchParams.get('xAxisValue'))).range([0, width]),
         yScale = d3.scale.linear().domain(getDomain(searchParams.get('yAxisValue'))).range([height, 0]),
-        radiusScale = d3.scale.linear().domain(getDomain(searchParams.get('size'))).range([5, 100]);
+        radiusScale = d3.scale.linear().domain(getDomain(searchParams.get('size'))).range([3, 35]);
 
     function getDomain(indicator) {
         let domain = [];
         drenets.map(d => {
             Object.keys(d[indicator]).forEach(key => {
-                if (!domain[0]) domain[0] = Number(d[indicator][key]);
-                if (!domain[1]) domain[1] = Number(d[indicator][key]);
-                if (Number(d[indicator][key]) < domain[0]) domain[0] = Number(d[indicator][key]);
-                if (Number(d[indicator][key]) > domain[1]) domain[1] = Number(d[indicator][key]);
+                if (!domain[0] && d.name !== 'NATIONAL') domain[0] = Number(d[indicator][key]);
+                if (!domain[1] && d.name !== 'NATIONAL') domain[1] = Number(d[indicator][key]);
+                if (Number(d[indicator][key]) && Number(d[indicator][key]) < domain[0] && d.name !== 'NATIONAL') domain[0] = Number(d[indicator][key]);
+                if (Number(d[indicator][key]) && Number(d[indicator][key]) > domain[1] && d.name !== 'NATIONAL') domain[1] = Number(d[indicator][key]);
             });
         });
         let padding = (domain[1] - domain[0]) / 10;
-        return [Math.max(0, domain[0] - padding), domain[1] + padding]
+        return [domain[0] - padding, domain[1] + padding]
     }
 
     // The x & y axes.
@@ -86,7 +86,7 @@ d3.json('../data/data_2018-11-21_plus-amenities.json', data => {
     let drenetName = svg.append("text")
         .attr("class", "country label")
         .attr("text-anchor", "start")
-        .attr("y", 80)
+        .attr("y", 40)
         .attr("x", 20)
         .text("");
 
@@ -96,14 +96,15 @@ d3.json('../data/data_2018-11-21_plus-amenities.json', data => {
         .data(drenets)
         .enter().append("circle")
         .attr("class", "dot")
+        .attr("fill", d => d.name === 'NATIONAL' ? '#D9E0E5' : '#002060')
         .on("mouseenter", function (d) {
-            drenetName.text(d.name);
+            drenetName.text(d.name.toLowerCase());
         })
         .on("mouseleave", function () {
             drenetName.text('');
         })
-        .on("mousedown", function () {
-            d3.select(this).classed("selected", !d3.select(this).classed("selected"));
+        .on("mousedown", function (d) {
+            if (d.name !== 'NATIONAL') d3.select(this).classed("selected", !d3.select(this).classed("selected"));
         })
 
     function update() {
@@ -115,11 +116,10 @@ d3.json('../data/data_2018-11-21_plus-amenities.json', data => {
                 return yScale(d[searchParams.get('yAxisValue')][`y${timeSlider.value}`]);
             })
             .attr("r", (d) => {
-                return radiusScale(d[searchParams.get('size')][`y${timeSlider.value}`]);
+                if (d.name === 'NATIONAL') return 100
+                else return radiusScale(d[searchParams.get('size')][`y${timeSlider.value}`]);
             })
-            .sort((a, b) => {
-                radius(b) - radius(a)
-            });
+
         yearLabel.text(timeSlider.value);
     }
     timeSlider.addEventListener('input', update)
