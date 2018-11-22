@@ -13,12 +13,10 @@ console.log(currentIndicator)
 let year = timeSlider.value;
 let yearTitle = document.querySelector('.year');
 
-let domain = [7, 25];
+let domain;
 let colors = ["#D9DFE5", "#002060"];
 
-let colorScale = d3.scale.linear()
-    .domain(domain)
-    .range(colors);
+let colorScale;
 
 let projection = d3.geo.mercator();
 
@@ -38,11 +36,15 @@ d3.queue()
     .await(function (error, topoJSON, data_) {
         data = window.getGraphData(data_, searchParams.get('educationLevel'));
 
+        domain = window.getDomain(data, currentIndicator);
+        colorScale = d3.scale.linear()
+            .domain(domain)
+            .range(colors);
         
         let topoJSONRoot = `gadm36_CIV_${adminLevel}`;
         let counties = topojson.feature(topoJSON, topoJSON.objects[topoJSONRoot]);
-        console.log(data.map(d => removeAccents(d.admin2)).sort());
-        console.log(counties.features.map(f => removeAccents(f.properties[`NAME_${adminLevel}`]).toUpperCase()).sort())
+        // console.log(data.map(d => cleanupName(d.admin2)).sort());
+        // console.log(counties.features.map(f => cleanupName(f.properties[`NAME_${adminLevel}`]).toUpperCase()).sort())
 
         projection.scale(1).translate([0, 0]);
 
@@ -78,14 +80,16 @@ setColors = () => {
         .style("fill", d => {
             if (d.properties) {
                 let featureName = d.properties[`NAME_${adminLevel}`];
-                featureName = featureName.toUpperCase();
-                const adminData = data.find(d => d[`admin${adminLevel}`] === featureName);
+                featureName = cleanupName(featureName.toUpperCase());
+                const adminData = data.find(d => cleanupName(d[`admin${adminLevel}`]) === featureName);
                 // console.log(featureName, adminData, data.map(d => d.id))
                 if (adminData) {
                     const values = adminData[currentIndicator];
                     const yearValue = values[`y${year}`];
-                    console.log(adminData, values, yearValue)
+                    // console.log(adminData, values, yearValue)
                     return colorScale(yearValue);
+                } else {
+                    console.warn('not found geojson:', featureName)
                 }
 
             }
